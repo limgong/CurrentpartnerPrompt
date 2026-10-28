@@ -109,8 +109,9 @@ pre code{background:none;padding:0;color:inherit}
   <h2>五分钟上手</h2>
   <ol class="steps">
     <li><b>装环境</b>：右键 <code>setup.ps1</code> → 使用 PowerShell 运行，等到显示「环境就绪」。</li>
-    <li><b>启动</b>：双击 <code>启动.bat</code>，等 5–10 秒会出现「现任」窗口。</li>
+    <li><b>启动服务</b>：双击 <code>debug_server.bat</code>，会弹出一个命令行窗口，等它显示 <code>Uvicorn running on http://127.0.0.1:7860</code>。<b>这个窗口不要关。</b></li>
     <li><b>填 API Key</b>：首次会自动跳到配置页；去 platform.deepseek.com 创建 Key，粘贴进来点「保存并验证」。</li>
+    <li><b>用浏览器打开</b>：地址栏输入 <code>http://127.0.0.1:7860</code>，回车。</li>
     <li><b>开始聊</b>：底部输入，按 <span class="kbd">Enter</span> 发送。</li>
   </ol>
   <div class="tip">Key 只保存在你电脑的 <code>.env</code> 里，不会上传。每人用自己的。</div>
@@ -246,11 +247,11 @@ pre code{background:none;padding:0;color:inherit}
 <section id="fix">
   <h2>出问题怎么办</h2>
 
-  <h3>窗口打不开</h3>
-  <p>双击 <code>debug_server.bat</code>，它会停住显示报错。把那段文字发给懂电脑的人。</p>
+  <h3>服务起不来</h3>
+  <p>双击 <code>debug_server.bat</code>，窗口别关，看最后的红字，把它发给懂电脑的人。</p>
 
-  <h3>网页打不开</h3>
-  <p>关掉重开；还不行就用浏览器手动打开 <code>http://127.0.0.1:7860</code>。</p>
+  <h3>浏览器打不开网址</h3>
+  <p>确认黑窗口还开着；地址必须是 <code>http://127.0.0.1:7860</code>（不是 https）；关掉系统代理再刷新。</p>
 
   <h3>回复是空的</h3>
   <p>打开 <code>out\serve_api.log</code> 看最后 20 行，关掉重开。还不行就把报错发人。</p>

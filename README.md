@@ -103,12 +103,26 @@ cd CurrentpartnerPrompt
 # 1. 装环境（自动找 Python、建 venv、装依赖、检查）
 powershell -ExecutionPolicy Bypass -File .\setup.ps1
 
-# 2. 启动
-.\启动.bat
+# 2. 启动本地服务（前台运行，日志直接打在窗口里）
+powershell -ExecutionPolicy Bypass -File .\debug_server.bat
+# 等价于：
+#   cd persona
+#   ..\venv\Scripts\python.exe -u serve_api.py
 ```
 
-首次打开会跳到 `http://127.0.0.1:7860/setup`，让你填 API Key。
+看到 `Uvicorn running on http://127.0.0.1:7860` 就是起来了。
+
+然后用浏览器打开：
+
+```
+http://127.0.0.1:7860
+```
+
+首次会跳到 `http://127.0.0.1:7860/setup`，让你填 API Key。
 填完点「保存并验证」，程序会真实调一次接口确认可用。
+
+> 服务是前台进程：关掉那个命令行窗口，服务就停了。
+> 想让它后台常驻：`start /min venv\Scripts\pythonw.exe persona\serve_api.py`
 
 ### 如果要导入微信聊天记录
 
@@ -145,7 +159,7 @@ powershell -ExecutionPolicy Bypass -File .\setup.ps1 -WithDecrypt
 
 ### 聊天
 
-打开窗口 → 底部输入 → Enter 发送（Shift+Enter 换行）。
+浏览器打开 http://127.0.0.1:7860 → 底部输入 → Enter 发送（Shift+Enter 换行）。
 
 底部状态栏会显示本轮命中了哪些记忆。
 
@@ -183,9 +197,9 @@ powershell -ExecutionPolicy Bypass -File .\setup.ps1 -WithDecrypt
 
 | 现象 | 原因 | 处理 |
 |---|---|---|
-| 双击 `启动.bat` 一闪而过 | 旧版脚本没有 pause | 用当前版本；或跑 `debug_server.bat` 看报错 |
-| 网页打不开 | 服务没起来 / 端口被占 | `debug_server.bat` 前台跑，看报错；换端口设 `APP_PORT` |
-| 浏览器黑屏 | Edge 应用模式 + GPU 合成 | 已加 `--disable-gpu`；仍不行就换默认浏览器打开 `127.0.0.1:7860` |
+| `debug_server.bat` 一闪而过 | 服务启动失败 | 重新双击，窗口别关，看最后的红字 |
+| 浏览器打不开 `127.0.0.1:7860` | 服务没起来 / 端口被占 / 代理拦截 | 确认黑窗口还开着；关掉系统代理；换端口设环境变量 `APP_PORT` |
+| 页面一直转圈 | 服务卡住 | 重启服务；`curl http://127.0.0.1:7860` 应返回 HTML |
 | 回复是空白 | 接口 500（历史表结构缺列等） | 看 `out/serve_api.log`；重启服务会自动补列 |
 | `401 Unauthorized` | API Key 无效或没余额 | 打开 `/setup` 重新填 |
 | 提示「未配置 API key」 | `.env` 为空 | 同上 |
@@ -201,9 +215,9 @@ powershell -ExecutionPolicy Bypass -File .\setup.ps1 -WithDecrypt
 
 ```
 .
-├─ 启动.bat                 启动（后台服务 + Edge 应用窗口）
-├─ start_edge.bat           仅用 Edge 应用模式
-├─ debug_server.bat         前台跑后端，看报错
+├─ debug_server.bat         启动本地服务（前台，推荐测试用）
+├─ 启动.bat                 可选：后台起服务 + Edge 应用窗口
+├─ start_edge.bat           可选：仅用 Edge 应用模式
 ├─ decrypt.bat              解密微信本地库（需要 UAC）
 ├─ step1_decrypt.py         解密实现
 ├─ setup.ps1                一键装环境
