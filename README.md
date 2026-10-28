@@ -227,7 +227,8 @@ powershell -ExecutionPolicy Bypass -File .\setup.ps1 -WithDecrypt
 ├─ HELP.md                  傻瓜式使用说明
 ├─ docs/
 │  ├─ WORKFLOW.md           从零复现的完整手册
-│  └─ ARCHITECTURE.md       架构说明
+│  ├─ ARCHITECTURE.md       架构说明
+│  └─ VIDEO_SCRIPT.md       介绍视频文稿（含分镜）
 └─ persona/
    ├─ serve_api.py          服务入口（FastAPI）
    ├─ admin.py              控制台接口
