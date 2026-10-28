@@ -1,0 +1,12 @@
+# 解密微信本地库所需的额外依赖（仅第一步用得到）
+# 注意：yara-python 和 pymem 必须装，缺任一个密钥扫描会报"缺少 Windows 运行时依赖"
+cryptography>=41
+pywin32>=306
+psutil>=5.9
+pycryptodome>=3.20
+pymem>=1.13
+yara-python>=4.5
+pefile>=2023.2.7
+loguru>=0.7
+pypinyin>=0.51
+pymysql>=1.1

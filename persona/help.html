@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>使用说明 · 现任</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f5f5f7;color:#1f1f1f;
+     font-family:-apple-system,"Microsoft YaHei","PingFang SC",sans-serif;
+     line-height:1.75;font-size:15px}
+a{color:#07a35a;text-decoration:none}
+a:hover{text-decoration:underline}
+.layout{display:flex;max-width:1180px;margin:0 auto;gap:28px;padding:28px 20px 80px}
+nav{position:sticky;top:24px;align-self:flex-start;width:200px;flex:0 0 200px;
+    background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+nav b{display:block;font-size:12px;color:#999;letter-spacing:.5px;margin:4px 0 8px}
+nav a{display:block;padding:5px 8px;border-radius:7px;color:#444;font-size:13.5px}
+nav a:hover{background:#f0f8f3;text-decoration:none}
+main{flex:1;min-width:0}
+section{background:#fff;border-radius:12px;padding:26px 30px;margin-bottom:20px;
+        box-shadow:0 1px 4px rgba(0,0,0,.05)}
+h1{font-size:24px;margin:0 0 6px}
+h2{font-size:18px;margin:0 0 14px;padding-left:10px;border-left:4px solid #07c160}
+h3{font-size:15px;margin:20px 0 8px}
+.lead{color:#666;font-size:14px;margin:0 0 18px}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid #eee;vertical-align:top}
+th{color:#888;font-weight:500;font-size:12.5px}
+code{background:#f2f2f4;padding:1px 6px;border-radius:5px;font-size:13px}
+pre{background:#1f2328;color:#e6edf3;padding:14px 16px;border-radius:10px;overflow:auto;
+    font-size:13px;line-height:1.6}
+pre code{background:none;padding:0;color:inherit}
+.steps{counter-reset:s;list-style:none;padding:0;margin:14px 0}
+.steps li{counter-increment:s;position:relative;padding:12px 14px 12px 48px;
+          background:#fafafa;border-radius:10px;margin-bottom:8px}
+.steps li:before{content:counter(s);position:absolute;left:14px;top:12px;width:22px;height:22px;
+    border-radius:50%;background:#07c160;color:#fff;font-size:13px;text-align:center;line-height:22px}
+.tip{background:#f0f9f4;border-left:3px solid #07c160;padding:10px 14px;border-radius:0 8px 8px 0;
+     font-size:13.5px;color:#33604a;margin:12px 0}
+.warn{background:#fff8ec;border-left:3px solid #f0a020;padding:10px 14px;border-radius:0 8px 8px 0;
+      font-size:13.5px;color:#7a5410;margin:12px 0}
+.danger{background:#fdf1f0;border-left:3px solid #e64340;padding:10px 14px;border-radius:0 8px 8px 0;
+        font-size:13.5px;color:#7d2a28;margin:12px 0}
+
+/* ---- 聊天界面示意图 ---- */
+.mock{width:100%;max-width:520px;margin:16px auto;border-radius:14px;overflow:hidden;
+      box-shadow:0 6px 24px rgba(0,0,0,.12);background:#ededed;font-size:13px}
+.mock .bar{background:#ededed;padding:10px 14px;border-bottom:1px solid #dcdcdc;
+           font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.mock .bar span{font-weight:400;color:#999;font-size:11px}
+.mock .body{padding:12px;min-height:190px}
+.mock .time{text-align:center;color:#b2b2b2;font-size:11px;margin:6px 0}
+.mock .row{display:flex;margin:9px 0;align-items:flex-start;gap:8px}
+.mock .row.me{justify-content:flex-end}
+.mock .av{width:32px;height:32px;border-radius:6px;flex:0 0 32px;background:#c9cdd4;
+          color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center}
+.mock .bubble{max-width:74%;padding:8px 12px;border-radius:10px;background:#fff}
+.mock .row.me .bubble{background:#95ec69}
+.mock .inputbar{display:flex;gap:8px;padding:10px;background:#f7f7f7;border-top:1px solid #e0e0e0}
+.mock .inputbar div{flex:1;background:#fff;border:1px solid #dcdcdc;border-radius:8px;
+                    padding:8px 10px;color:#bbb;font-size:12px}
+.mock .inputbar b{background:#07c160;color:#fff;border-radius:8px;padding:8px 16px;font-weight:400}
+.mock .status{background:#f7f7f7;color:#888;font-size:11px;padding:5px 12px}
+
+.kbd{display:inline-block;border:1px solid #ccc;border-bottom-width:2px;border-radius:5px;
+     padding:0 6px;font-size:12px;background:#fafafa;font-family:monospace}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:900px){
+  nav{display:none}
+  .layout{padding:16px 12px 60px}
+  section{padding:20px 16px}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav>
+  <b>开始</b>
+  <a href="#what">这是什么</a>
+  <a href="#start">五分钟上手</a>
+  <a href="#ui">界面导览</a>
+  <b>核心</b>
+  <a href="#card">人设卡</a>
+  <a href="#slash">斜杠命令</a>
+  <a href="#better">怎么让它更像</a>
+  <b>操作</b>
+  <a href="#add">加新的人</a>
+  <a href="#update">更新聊天记录</a>
+  <b>其它</b>
+  <a href="#fix">出问题怎么办</a>
+  <a href="#words">名词解释</a>
+  <a href="#never">别做的事</a>
+</nav>
+
+<main>
+
+<section id="what">
+  <h1>现任 · 使用说明</h1>
+  <p style="color:#07a35a;font-size:13px;margin:-2px 0 10px">把一个人，留在一个窗口里。</p>
+  <p class="lead">不用懂代码。照着做就行。</p>
+  <p>这个程序读一份微信聊天记录，做出一个"像他一样说话"的对话窗口：你打字，它用他的语气、习惯和记得的事回你。</p>
+  <div class="warn">它<b>不会真的联系到他</b>，只是在你电脑上跑的一个模拟。</div>
+</section>
+
+<section id="start">
+  <h2>五分钟上手</h2>
+  <ol class="steps">
+    <li><b>装环境</b>：右键 <code>setup.ps1</code> → 使用 PowerShell 运行，等到显示「环境就绪」。</li>
+    <li><b>启动</b>：双击 <code>启动.bat</code>，等 5–10 秒会出现「现任」窗口。</li>
+    <li><b>填 API Key</b>：首次会自动跳到配置页；去 platform.deepseek.com 创建 Key，粘贴进来点「保存并验证」。</li>
+    <li><b>开始聊</b>：底部输入，按 <span class="kbd">Enter</span> 发送。</li>
+  </ol>
+  <div class="tip">Key 只保存在你电脑的 <code>.env</code> 里，不会上传。每人用自己的。</div>
+</section>
+
+<section id="ui">
+  <h2>界面导览</h2>
+
+  <h3>聊天页</h3>
+  <div class="mock">
+    <div class="bar">阿七 <span>Enter 发送 · Shift+回车 换行</span></div>
+    <div class="body">
+      <div class="time">14:32</div>
+      <div class="row"><div class="av">他</div><div class="bubble">在干嘛</div></div>
+      <div class="row me"><div class="bubble">看视频呢 咋了</div><div class="av">我</div></div>
+      <div class="row"><div class="av">他</div><div class="bubble">周末有空吗</div></div>
+    </div>
+    <div class="inputbar"><div>在这里打字…</div><b>发送</b></div>
+    <div class="status">记忆：山里那天… · 就绪</div>
+  </div>
+  <table>
+    <tr><th>位置</th><th>是什么</th></tr>
+    <tr><td>顶部标题</td><td>当前正在对话的人</td></tr>
+    <tr><td>白色气泡</td><td>他说的话</td></tr>
+    <tr><td>绿色气泡</td><td>你说的话</td></tr>
+    <tr><td>中间灰色小字</td><td>时间，间隔 5 分钟才显示一次</td></tr>
+    <tr><td>底部状态栏</td><td>这一轮用到了哪条记忆／报错提示</td></tr>
+  </table>
+
+  <h3>控制台</h3>
+  <p>聊天页左上角点「控制台」，或直接打开 <code>http://127.0.0.1:7860/admin</code>。</p>
+  <table>
+    <tr><th>区块</th><th>用途</th></tr>
+    <tr><td>联系人</td><td>切换成别人、加新的人</td></tr>
+    <tr><td>记忆构成</td><td>看有多少条真实聊天、朋友圈、虚拟对话</td></tr>
+    <tr><td>人设卡</td><td>最重要的一张纸，可编辑、可让 AI 重写</td></tr>
+    <tr><td>修改记录</td><td>每次用 <code>/</code> 改了什么，能回滚</td></tr>
+    <tr><td>状态</td><td>亲密／信任／耐心／兴趣 四个滑杆</td></tr>
+    <tr><td>记忆配比</td><td>三类记忆权重 + 「他说多少」</td></tr>
+    <tr><td>数据</td><td>更新聊天、重建索引、清空记录、抓头像、退出</td></tr>
+  </table>
+</section>
+
+<section id="card">
+  <h2>人设卡是什么</h2>
+  <p>程序每次回答前都会先读这张卡。卡写得像，回答就自然；卡写得空，回答就很假。</p>
+  <table>
+    <tr><th>段落</th><th>写什么</th></tr>
+    <tr><td>你是谁</td><td>关系、称呼、现在各在哪做什么</td></tr>
+    <tr><td>当前状态</td><td>截至最近一个月，他在做什么、关系到哪一步</td></tr>
+    <tr><td>关系变化</td><td>按年月列关系怎么变的，每条「某年某月：发生了什么」</td></tr>
+    <tr><td>共同经历</td><td>一起做过的事，每条带年月</td></tr>
+    <tr><td>怎么说话</td><td>平均几个字、用不用标点、爱用什么词</td></tr>
+    <tr><td>口头禅 / 表情码</td><td>真实出现过的说法和表情</td></tr>
+    <tr><td>示例</td><td>6–8 组真实对话，学语气最直接</td></tr>
+    <tr><td>绝对不要</td><td>禁忌：他最讨厌的说话方式</td></tr>
+  </table>
+  <div class="tip">两种改法：控制台直接改并保存；或聊天时用 <code>/</code> 命令（推荐）。</div>
+</section>
+
+<section id="slash">
+  <h2>斜杠命令</h2>
+  <p>在聊天框输入以 <code>/</code> 开头的话，发出去，它会把人设卡改掉。</p>
+
+  <h3>说话规矩</h3>
+  <table>
+    <tr><th>你打的字</th><th>指的是谁</th></tr>
+    <tr><td>「你」</td><td><b>他</b>（被模仿的人）</td></tr>
+    <tr><td>「我」</td><td><b>你自己</b></td></tr>
+  </table>
+
+  <h3>例子</h3>
+<pre><code>/你上周去了日本看樱花，回来给我带了抹茶
+/他最近开始实习了，在某市做数据
+/2025年3月那次吵架是因为他放我鸽子
+/他笑的时候说「乐」不说「哈哈」</code></pre>
+
+  <h3>会自动放到哪</h3>
+  <table>
+    <tr><th>你说的是</th><th>放到</th></tr>
+    <tr><td>现在在哪、做什么、关系怎样</td><td>当前状态</td></tr>
+    <tr><td>某年某月发生了什么、怎么变的</td><td>关系变化</td></tr>
+    <tr><td>怎么说话、口头禅、表情</td><td>怎么说话 / 口头禅</td></tr>
+    <tr><td>不能提的事</td><td>绝对不要</td></tr>
+  </table>
+
+  <h3>其它命令</h3>
+  <table>
+    <tr><th>命令</th><th>作用</th></tr>
+    <tr><td><code>/undo</code></td><td>撤销上一次修改</td></tr>
+    <tr><td><code>/clear</code></td><td>清空你和它的聊天记录（人设卡不动）</td></tr>
+  </table>
+  <div class="tip">每次修改前都会自动备份，控制台「修改记录」里可以回滚到任意一版。</div>
+</section>
+
+<section id="better">
+  <h2>怎么让它更像</h2>
+  <p>按重要程度排：</p>
+  <table>
+    <tr><th>顺序</th><th>做什么</th></tr>
+    <tr><td>1</td><td>把「你是谁」写准：关系、称呼、现在各在哪、到哪一步</td></tr>
+    <tr><td>2</td><td>「关系变化」补成 5 条以上，每条带年月</td></tr>
+    <tr><td>3</td><td>「示例」放 8 组真实对话</td></tr>
+    <tr><td>4</td><td>「怎么说话」写清：平均几个字、用不用标点、爱用哪个表情</td></tr>
+    <tr><td>5</td><td>调状态滑杆：亲密高更黏，耐心低更敷衍</td></tr>
+    <tr><td>6</td><td>调记忆配比：虚假权重太高会串味</td></tr>
+  </table>
+</section>
+
+<section id="add">
+  <h2>加一个新的人</h2>
+  <ol class="steps">
+    <li>控制台 → 联系人 → 点「添加…」</li>
+    <li>从列表里选一个有聊天记录的会话</li>
+    <li>点「添加」，等 10–20 秒</li>
+  </ol>
+  <p>它会自动抓双方微信头像、抽样聊天、调 AI 写一份人设卡。</p>
+  <div class="warn">消息少于 50 条不会生成人设卡，会留一个空模板给你手写。</div>
+</section>
+
+<section id="update">
+  <h2>更新聊天记录</h2>
+  <p>微信每天有新消息，想让"他"知道就要更新。</p>
+  <div class="warn"><b>前提</b>：微信客户端正开着且已登录；装过解密依赖（<code>setup.ps1 -WithDecrypt</code>）。</div>
+  <ol class="steps">
+    <li>控制台 → 数据 → 点「更新聊天记录」</li>
+    <li>弹 UAC，点「是」</li>
+    <li>等 30–60 秒，看到 <code>decrypt exit=0</code> 和新的条数</li>
+  </ol>
+  <p>点「否」会失败，日志里会写「解密失败」。</p>
+</section>
+
+<section id="fix">
+  <h2>出问题怎么办</h2>
+
+  <h3>窗口打不开</h3>
+  <p>双击 <code>debug_server.bat</code>，它会停住显示报错。把那段文字发给懂电脑的人。</p>
+
+  <h3>网页打不开</h3>
+  <p>关掉重开；还不行就用浏览器手动打开 <code>http://127.0.0.1:7860</code>。</p>
+
+  <h3>回复是空的</h3>
+  <p>打开 <code>out\serve_api.log</code> 看最后 20 行，关掉重开。还不行就把报错发人。</p>
+
+  <h3>提示 401 / 未配置 API key</h3>
+  <p>打开 <code>http://127.0.0.1:7860/setup</code> 重新填 key。</p>
+
+  <h3>它回的完全不像</h3>
+  <p>先确认顶部是不是你要的那个人 → 看人设卡「你是谁」「示例」写没写 → 调低「虚假」权重 → 用 <code>/</code> 补几条具体习惯。</p>
+
+  <h3>它瞎编没发生过的事</h3>
+  <p>在「绝对不要」加一条「不要编造没发生过的见面」，调低「虚假」权重，删掉事实库里错的条目。</p>
+
+  <h3>解密失败</h3>
+  <p>检查：微信开着并登录了吗？UAC 点了「是」吗？跑过 <code>setup.ps1 -WithDecrypt</code> 吗？</p>
+</section>
+
+<section id="words">
+  <h2>名词解释</h2>
+  <table>
+    <tr><th>词</th><th>意思</th></tr>
+    <tr><td>人设卡</td><td>写着他是什么样的人的文档，最重要</td></tr>
+    <tr><td>事实</td><td>一条条短结论，如「他在上海读研」</td></tr>
+    <tr><td>记忆</td><td>原始聊天片段，被检索出来当参考</td></tr>
+    <tr><td>真实 / 朋友圈 / 虚假</td><td>三种记忆来源：真聊天 / 朋友圈 / 和 AI 聊的</td></tr>
+    <tr><td>状态</td><td>四个滑杆，控制他此刻的心情</td></tr>
+    <tr><td>虚拟对话</td><td>之前和 AI 分身聊出来的内容，不是真事</td></tr>
+    <tr><td>三级检索</td><td>搜不到就换更宽的搜法，最多试三次</td></tr>
+  </table>
+</section>
+
+<section id="never">
+  <h2>别做的事</h2>
+  <div class="danger">
+    <p>❌ 别把 <code>.env</code>（API Key）发给别人</p>
+    <p>❌ 别把 <code>persona/profiles/</code> 传到网上（里面有聊天和人设卡）</p>
+    <p>❌ 别用这个程序登录他的微信、冒充他发消息</p>
+    <p>❌ 别拿别人的聊天记录做，除非对方同意</p>
+  </div>
+</section>
+
+<section>
+  <h2>想看得更深</h2>
+  <p>项目原理看仓库里的 <code>README.md</code>；完整实现过程看 <code>docs/WORKFLOW.md</code>。</p>
+  <p><a href="/">← 回到聊天</a> · <a href="/admin">控制台</a></p>
+</section>
+
+</main>
+</div>
+</body>
+</html>

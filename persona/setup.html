@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>首次配置</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f4f6;font-family:-apple-system,"Microsoft YaHei",sans-serif;color:#222}
+.wrap{max-width:560px;margin:80px auto;padding:0 20px}
+.card{background:#fff;border-radius:12px;padding:26px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+h1{font-size:18px;margin:0 0 6px}
+p{font-size:13px;color:#666;line-height:1.7;margin:0 0 14px}
+input{width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:14px;outline:none}
+input:focus{border-color:#07c160}
+button{width:100%;margin-top:14px;padding:11px;border:none;border-radius:8px;background:#07c160;color:#fff;font-size:14px;cursor:pointer}
+button:disabled{background:#b5e7c9}
+.tip{font-size:12px;color:#999;margin-top:12px}
+.ok{color:#07c160}.err{color:#e64340}
+</style></head><body><div class=wrap>
+<div class=card>
+  <h1>配置 DeepSeek API Key</h1>
+  <p>这个程序用 DeepSeek 的接口来生成回复、自动写人设卡。<br>
+     每个人使用自己的 key，程序不会上传你的聊天记录，key 只保存在本地 <code>.env</code> 文件里。</p>
+  <input id=key type=password placeholder="sk-xxxxxxxxxxxxxxxx">
+  <button id=go onclick=save()>保存并验证</button>
+  <p class=tip id=msg>Key 在 platform.deepseek.com 创建，形如 sk- 开头的一串字符。</p>
+</div></div>
+<script>
+async function save(){
+  const key=document.getElementById('key').value.trim();
+  const msg=document.getElementById('msg'), btn=document.getElementById('go');
+  if(!key.startsWith('sk-')){msg.className='tip err';msg.textContent='格式不对，应该以 sk- 开头';return;}
+  btn.disabled=true;btn.textContent='验证中…';msg.className='tip';msg.textContent='正在调用接口验证…';
+  try{
+    const r=await fetch('/api/setup/key',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({key})});
+    const j=await r.json();
+    if(j.ok){msg.className='tip ok';msg.textContent='验证通过，正在进入…';setTimeout(()=>location.href='/',800);}
+    else{msg.className='tip err';msg.textContent=j.msg||'验证失败';btn.disabled=false;btn.textContent='保存并验证';}
+  }catch(e){msg.className='tip err';msg.textContent='请求失败：'+e;btn.disabled=false;btn.textContent='保存并验证';}
+}
+document.getElementById('key').addEventListener('keydown',e=>{if(e.key==='Enter')save();});
+</script></body></html>

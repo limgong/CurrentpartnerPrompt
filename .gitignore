@@ -1,0 +1,30 @@
+# ===== 私人数据：绝对不要提交 =====
+# 聊天记录、人设卡、头像、记忆索引、解密出的数据库、API key 都在这里
+data/
+persona/profiles/
+persona/avatars/
+persona/memconfig.json
+persona/active.json
+persona/backups/
+persona/patches.jsonl
+out/
+workspace/
+.env
+
+# ===== 运行产物 =====
+*.log
+*.pkl
+*.db
+*.db-wal
+*.db-shm
+__pycache__/
+*.pyc
+
+# ===== 环境 =====
+venv/
+models/
+tmp/
+bin/
+archive/
+dist/
+build/

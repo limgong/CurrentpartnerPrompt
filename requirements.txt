@@ -1,0 +1,7 @@
+# 人格对话系统运行依赖（不含解密工具）
+fastapi>=0.110
+uvicorn[standard]>=0.27
+requests>=2.31
+jieba>=0.42
+rank-bm25>=0.2.2
+zstandard>=0.22

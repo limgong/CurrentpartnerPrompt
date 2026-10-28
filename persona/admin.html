@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>控制台 · 现任</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f4f6;font-family:-apple-system,"Microsoft YaHei",sans-serif;color:#222}
+.wrap{max-width:880px;margin:0 auto;padding:18px}
+.head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.head a{font-size:13px;color:#07c160;text-decoration:none;border:1px solid #07c160;border-radius:6px;padding:6px 10px}
+h1{font-size:17px;margin:0}
+.card{background:#fff;border-radius:10px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.card h2{font-size:13px;margin:0 0 10px;color:#666;font-weight:600}
+.row{display:flex;align-items:center;gap:10px;margin:7px 0}
+.row label{width:88px;font-size:13px;color:#666}
+input[type=range]{flex:1}
+.val{width:34px;text-align:right;font-size:13px;color:#07c160;font-variant-numeric:tabular-nums}
+button{border:1px solid #dcdcdc;background:#fff;border-radius:6px;padding:6px 11px;font-size:12px;cursor:pointer}
+button.primary{background:#07c160;border-color:#07c160;color:#fff}
+button.danger{color:#e64340;border-color:#f3c6c6}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:#fafafa;border-radius:8px;padding:9px}
+.stat b{display:block;font-size:18px;font-variant-numeric:tabular-nums}
+.stat span{font-size:11px;color:#888}
+.item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f1f1f1}
+.item:last-child{border-bottom:none}
+.item img{width:34px;height:34px;border-radius:6px;object-fit:cover;background:#e6e6e6}
+.item .nm{flex:1;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .meta{font-size:11px;color:#999;margin-left:6px}
+.tag{font-size:11px;color:#07c160;border:1px solid #b8ebc9;border-radius:4px;padding:1px 5px}
+textarea{width:100%;height:280px;border:1px solid #e3e3e3;border-radius:8px;padding:10px;font-size:13px;line-height:1.6;font-family:inherit;resize:vertical}
+pre{background:#fafafa;border-radius:8px;padding:9px;font-size:12px;overflow:auto;max-height:150px;margin:8px 0 0}
+.tip{font-size:11px;color:#999;margin-top:6px}
+.avatars{display:flex;gap:14px;align-items:center}
+.avatars img{width:56px;height:56px;border-radius:8px;object-fit:cover;background:#ddd}
+select{padding:5px 8px;border:1px solid #ddd;border-radius:6px;font-size:12px;max-width:420px}
+</style></head><body><div class=wrap>
+<div class=head><h1>控制台</h1><a href="/" target="_blank">← 返回聊天</a></div>
+
+<div class=card>
+  <h2>联系人</h2>
+  <div id=contacts></div>
+  <div class=row style="margin-top:10px">
+    <select id=addsel></select>
+    <button class=primary onclick="addContact()">添加</button>
+  </div>
+  <p class=tip>添加时会自动抓取微信头像、导入该联系人的聊天与朋友圈，并生成一份人设卡模板。</p>
+</div>
+
+<div class=card>
+  <h2>当前：<span id=who>–</span></h2>
+  <div class="grid">
+    <div class=stat><b id=n-real>–</b><span>真实聊天</span></div>
+    <div class=stat><b id=n-sns>–</b><span>朋友圈</span></div>
+    <div class=stat><b id=n-synth>–</b><span>和 AI 聊的</span></div>
+  </div>
+  <p class=tip>最后一条真实消息：<span id=last>–</span> · 人设卡 <span id=plen>–</span> 字 · 对话 <span id=hist>–</span> 条</p>
+</div>
+
+<div class=card>
+  <h2>人设卡 <span id=pwho class=tag></span> <span id=plen2 class=tag></span></h2>
+  <textarea id=persona placeholder="加载中…"></textarea>
+  <div class=row style="margin-top:8px">
+    <button class=primary onclick="savePersona()">保存</button>
+    <select id="genN" onchange="saveGenN()" title="抽样多少组对话">
+      <option value="20">20 组</option>
+      <option value="40" selected>40 组</option>
+      <option value="60">60 组</option>
+      <option value="100">100 组</option>
+      <option value="150">150 组</option>
+    </select>
+    <button onclick="genPersona()">用 AI 生成</button>
+    <button onclick="undoPersona()">撤销上次修改</button>
+    <button onclick="loadPersona()">重新载入</button>
+  </div>
+  <p class=tip>改完点保存即时生效；保存前会自动备份，撤销可回退一次。</p>
+</div>
+
+<div class=card>
+  <h2>状态</h2>
+  <div id=dims></div>
+</div>
+
+<div class=card>
+  <h2>记忆配比</h2>
+  <div class=row><label>真实权重</label><input type=range id=w_real min=0 max=15><span class=val id=v-w_real></span></div>
+  <div class=row><label>朋友圈权重</label><input type=range id=w_sns min=0 max=15><span class=val id=v-w_sns></span></div>
+  <div class=row><label>虚假权重</label><input type=range id=w_synth min=0 max=15><span class=val id=v-w_synth></span></div>
+  <div class=row><label>他说多少</label><input type=range id=talk_ratio min=0 max=100><span class=val id=v-talk></span></div>
+  <div class=row><label>开关</label>
+    <label style="width:auto"><input type=checkbox id=use_synth> 虚假记忆</label>
+    <label style="width:auto"><input type=checkbox id=use_sns> 朋友圈</label>
+  </div>
+</div>
+
+<div class=card>
+  <h2>修改记录</h2>
+  <div id=patchList style="max-height:220px;overflow:auto"></div>
+  <p class=tip>列出对这个联系人人设卡的 / 修改；点「回到这版」可回滚到那次修改前。</p>
+</div>
+
+<div class=card>
+  <h2>数据</h2>
+  <div class=row style="flex-wrap:wrap">
+    <button class=primary onclick="updateChat()">更新聊天记录</button>
+    <button onclick="rebuild()">重建索引</button>
+    <button class=danger onclick="clearSynth()">清空该联系人的 AI 对话</button>
+    <button onclick="grabAvatars()">抓取头像</button>
+    <button class=danger onclick="shutdown()">退出应用</button>
+  </div>
+  <pre id=log>就绪</pre>
+</div>
+
+<div class=card>
+  <h2>头像</h2>
+  <div class=avatars>
+    <div><img id=av-him><div class=tip>他</div></div>
+    <div><img id=av-me><div class=tip>我</div></div>
+  </div>
+</div>
+</div>
+<script>
+const DIMS=['亲密','信任','耐心','兴趣'];
+let active=null, cfg={};
+const $=id=>document.getElementById(id);
+function log(t){$('log').textContent=t;}
+async function j(url,body){
+  const r=await fetch(url,{method:body?'POST':'GET',headers:{'Content-Type':'application/json'},
+    body:body?JSON.stringify(body):undefined});
+  return await r.json();
+}
+async function loadContacts(){
+  const d=await j('/api/contacts');
+  active=d.active;
+  $('contacts').innerHTML=d.list.map(c=>`
+    <div class=item>
+      <img src="${c.avatar_url||''}" onerror="this.style.visibility='hidden'">
+      <div class=nm>${c.name}<span class=meta>${c.kind} · ${c.count.toLocaleString()} 条</span>
+        ${c.active?'<span class=tag>当前</span>':''}</div>
+      <button onclick="switchC('${c.wxid}')">${c.active?'重载':'切换'}</button>
+    </div>`).join('') || '<p class=tip>还没有联系人</p>';
+  const have=new Set(d.list.map(c=>c.wxid));
+  const opts=d.all_chats.filter(c=>!have.has(c.wxid));
+  $('addsel').innerHTML='<option value="">选择要添加的联系人…</option>'+
+    opts.map(c=>`<option value="${c.wxid}">${c.name}（${c.count} 条）</option>`).join('');
+  $('who').textContent=(d.list.find(c=>c.active)||{}).name||active;
+}
+function dimRow(d,v){return `<div class=row><label>${d}</label>
+  <input type=range data-dim="${d}" min=0 max=100 value="${v}"><span class=val id=dim-${d}>${v}</span></div>`;}
+async function loadStatus(){
+  const s=await j('/api/admin/status');
+  $('n-real').textContent=s.mem.real.toLocaleString();
+  $('n-sns').textContent=s.mem.sns.toLocaleString();
+  $('n-synth').textContent=s.mem.synth.toLocaleString();
+  $('last').textContent=s.last_real_date;
+  $('plen').textContent=s.persona_chars;
+  $('hist').textContent=s.history;
+  $('dims').innerHTML=DIMS.map(d=>dimRow(d,s.state[d])).join('');
+  document.querySelectorAll('[data-dim]').forEach(el=>{
+    el.oninput=()=>$('dim-'+el.dataset.dim).textContent=el.value;
+    el.onchange=saveState;});
+  cfg=s.cfg;
+  if(cfg.gen_samples){const el=document.getElementById('genN');if(el)el.value=String(cfg.gen_samples);}
+  for(const k of ['w_real','w_sns','w_synth']){
+    const el=$(k); el.value=Math.round((cfg[k]??1)*10);
+    $('v-'+k).textContent=(el.value/10).toFixed(1);
+    el.oninput=()=>$('v-'+k).textContent=(el.value/10).toFixed(1);
+    el.onchange=saveCfg;
+  }
+  const tr=$('talk_ratio'); tr.value=cfg.talk_ratio??50; $('v-talk').textContent=tr.value;
+  tr.oninput=()=>$('v-talk').textContent=tr.value; tr.onchange=saveCfg;
+  $('use_synth').checked=cfg.use_synth!==false; $('use_sns').checked=cfg.use_sns!==false;
+  $('use_synth').onchange=saveCfg; $('use_sns').onchange=saveCfg;
+  $('av-him').src='/static/'+active+'/avatars/him.jpg?t='+Date.now();
+  $('av-me').src='/static/'+active+'/avatars/me.jpg?t='+Date.now();
+}
+async function saveState(){
+  const dims={};document.querySelectorAll('[data-dim]').forEach(el=>dims[el.dataset.dim]=+el.value);
+  const r=await j('/api/admin/state',{dims});log('状态已保存 '+JSON.stringify(r.state));
+}
+async function saveCfg(){
+  const r=await j('/api/admin/memcfg',{
+    w_real:$('w_real').value/10,w_sns:$('w_sns').value/10,w_synth:$('w_synth').value/10,
+    talk_ratio:+$('talk_ratio').value,use_synth:$('use_synth').checked,use_sns:$('use_sns').checked});
+  log('配比已保存 '+JSON.stringify(r.cfg));
+}
+async function switchC(w){const r=await j('/api/contact/switch',{wxid:w});
+  log('已切换 '+r.active);
+  await loadContacts();await loadStatus();await loadPersona();await loadPatches();
+  log('人设卡已切换到 '+($('who')?$('who').textContent:r.active));}
+async function addContact(){
+  const w=$('addsel').value; if(!w){log('先选一个联系人');return;}
+  log('添加中…');const r=await j('/api/contact/add',{wxid:w});
+  log('已添加：'+r.dir+(r.gen?'\n'+r.gen:''));
+  await loadContacts();await loadStatus();await loadPersona();
+}
+async function updateChat(){log('更新中…');
+  const r=await j('/api/admin/update-chat',{});
+  log(r.log.join('\n')+'\n联系人 '+r.contacts+'\n'+JSON.stringify(r.stat));await loadStatus();}
+async function rebuild(){log('重建中…');const r=await j('/api/admin/rebuild',{});
+  log('完成，联系人 '+r.contacts);await loadStatus();}
+async function clearSynth(){
+  if(!confirm('删掉该联系人和 AI 的全部对话记录？'))return;
+  const r=await j('/api/admin/clear-synth',{});log('删除 '+r.deleted+' 条');await loadStatus();}
+async function loadPatches(){
+  try{
+    const r=await j('/api/admin/patches?c='+encodeURIComponent(active));
+    const list=r.list||[];
+    document.getElementById('patchList').innerHTML = list.length ? list.map(p=>`
+      <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid #f2f2f2">
+        <div style="flex:0 0 92px;color:#999;font-size:11px">${p.time}</div>
+        <div style="flex:1;font-size:12px">
+          ${(p.patch||'').replace(/</g,'&lt;')}
+          <span style="color:#bbb;font-size:11px"> · ${p.intent||''} · ${p.delta>0?'+':''}${p.delta} 字</span>
+        </div>
+        ${p.backup_exists?`<button style="font-size:11px" onclick="restorePatch('${p.backup}')">回到这版</button>`:''}
+      </div>`).join('') : '<p class=tip>还没有 / 修改记录</p>';
+  }catch(e){}
+}
+async function restorePatch(bak){
+  if(!confirm('回滚到这次修改之前？当前版本会另存一份。'))return;
+  const r=await j('/api/persona/restore',{c:active,backup:bak});
+  log(r.msg); await loadPersona(); await loadPatches();
+}
+async function loadPersona(){
+  const r=await fetch('/api/persona');const d=await r.json();
+  const t=document.getElementById('persona');t.value=d.text||'';
+  document.getElementById('plen2').textContent=(d.text||'').length+' 字';
+  const w=document.getElementById('pwho');
+  if(w) w.textContent=((d.text||'').splitlines()[0]||'').replace('# 人设卡（L0）— ','')||'';
+}
+async function saveGenN(){
+  const n=+document.getElementById('genN').value;
+  try{await j('/api/admin/memcfg',{gen_samples:n});log('抽样条数已设为 '+n+' 组');}catch(e){}
+}
+async function genPersona(){
+  if(!confirm('用聊天记录重新生成人设卡？现有内容会备份。'))return;
+  log('生成中，可能需要 10-30 秒…');
+  try{
+    const r=await j('/api/persona/generate',{c:active,n:+document.getElementById('genN').value});
+    log((r.ok?'✅ ':'⚠️ ')+r.msg+(r.stats?'  '+JSON.stringify(r.stats):''));
+  }catch(e){log('失败：'+e);return;}
+  await loadPersona();
+}
+async function savePersona(){
+  const text=document.getElementById('persona').value;
+  const r=await j('/api/persona/save',{text});log(r.msg);
+  if(r.ok) document.getElementById('plen2').textContent=text.length+' 字';
+}
+async function undoPersona(){const r=await j('/api/persona/undo',{});log(r.msg);await loadPersona();}
+async function shutdown(){
+  if(!confirm('停止后台服务？停止后需要重新启动程序。'))return;
+  await j('/api/admin/shutdown',{});document.body.innerHTML='<p style="padding:40px;font-size:14px;color:#666">服务已停止，可以关闭窗口了。</p>';
+}
+async function grabAvatars(){const r=await j('/api/admin/avatars',{});log(JSON.stringify(r));await loadStatus();}
+(async()=>{await loadContacts();await loadStatus();await loadPersona();await loadPatches();})();
+</script></body></html>
